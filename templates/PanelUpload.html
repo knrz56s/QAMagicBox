@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>上傳影像檔</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+          crossorigin="anonymous">
+    </head>
+
+    <body>
+    <style>
+        /*如有引用，請註明作者*/
+        /*link : https://codepen.io/l13013312333/pen/PEdbxe*/
+        /**
+        * Color palette tools
+        *©2018/1/25 KUI-HAO, LIU Wittens
+        *
+        * The program can be quoted for free; you can redistribute and/or modify
+        *
+        *This program hopes it will be useful,
+        * But without any guarantees or guarantees.
+        */
+        .preview {
+            background:#888888;
+            width:550px;
+            height:auto;
+            text-align:center;
+        }
+        .preview img{
+            height:320px;
+            order:1;
+            vertical-align : middle;
+        }
+        .btn{
+            width:90px;
+            height:45px;
+            background:blue;
+            border:none;
+            outline:none;
+            border-radius: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,.1);
+            cursor:pointer;
+            font-size:16px;
+            color:white;
+            font-weight: 600;
+        }
+    </style>
+
+
+    {% with errors = get_flashed_messages(category_filter=["error"]) %}
+    {% if errors %}
+    <div class="alert alert-danger alert-dismissible fade show"
+        role="alert">
+        <ul>
+            {%- for msg in errors %}
+            <li>{{ msg }}</li>
+            {% endfor -%}
+        </ul>
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    {% with messages = get_flashed_messages(category_filter=["success"]) %}
+    {% if messages %}
+    <div class="alert alert-success alert-dismissible fade show"
+        role="alert">
+        <ul>
+            {%- for msg in messages %}
+            <li>{{ msg }}</li>
+            {% endfor -%}
+        </ul>
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                aria-label="Close"></button>
+    </div>
+    {% endif %}
+    {% endwith %}
+
+
+    <h1>上傳pdf：</h1><br>
+
+    <form method="post" enctype="multipart/form-data" action="/uploadPdf">
+        <input type="file" name="pdfFile" accept=".pdf">
+        <br><br>
+        <button type="submit" class="btn">Upload</button>
+    </form>
+
+    <br><br><br>
+
+    <h1>上傳圖片(jpg, jpeg, png)：</h1><br>
+
+    <form method="post" enctype="multipart/form-data" action="/uploadImg">
+        <div>
+            <input type="file" id="imageFile" name="imageFile" accept=".jpg, .jpeg, .png"   style="position:absolute;height:320px;width:550px;">
+        </div>
+        <div class="preview" style="float:left;background:#cccccc;height:320px;width:550px;text-align:center;z-index:1;">
+            <p style="line-height: 300px;">未選擇任何檔案</p>
+        </div>
+        <input type="submit" value = "Upload" class="btn">
+    </form>
+
+    </body>
+    
+    <script>
+        var input = document.getElementById('imageFile');
+        var preview = document.querySelector('.preview');
+
+        input.style.opacity = 0;
+        input.addEventListener('change', updateImageDisplay);function updateImageDisplay() {
+            while(preview.firstChild) {
+                preview.removeChild(preview.firstChild);
+            }
+
+            if(input.files.length === 0) {
+                var para = document.createElement('p');
+                para.textContent = '未選擇任何檔案';
+            para.style="line-height: 300px;";
+                preview.appendChild(para);
+            } 
+            else {
+                var para = document.createElement('p');
+                var image = document.createElement('img');
+                image.src = window.URL.createObjectURL(input.files[0]);
+                preview.appendChild(image);
+                preview.appendChild(para);
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+    crossorigin="anonymous"></script>
+
+</html>
