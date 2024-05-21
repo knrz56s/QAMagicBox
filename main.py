@@ -2,7 +2,7 @@ from flask import Flask, Blueprint, render_template, redirect, url_for, request,
 import requests, os
 from werkzeug.utils import secure_filename
 
-from FileProcess import pdfExtract
+from PDF import PDF
 from Secrets import UPLOAD_FOLDER
 
 app = Flask(
@@ -21,11 +21,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def index():
     return render_template('PanelUpload.html')
 
+
 from flask import send_from_directory
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 
 @app.route("/uploadImg", methods=['POST'])
 def upload_image():
@@ -70,7 +72,9 @@ def upload_pdf():
             else:
                 flash('Pdf uploaded successfully!', 'success')
         
-        pdfExtract(file)
+        uploadPdf = PDF(file)
+        response = uploadPdf.extract_keywords()
+
     except Exception as e:
         # Log the exception or handle it in a way that's appropriate for your application
         flash('An error occurred: {}'.format(str(e)), 'error')
