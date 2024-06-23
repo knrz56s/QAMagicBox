@@ -72,8 +72,8 @@ def upload_pdf():
             else:
                 flash('Pdf uploaded successfully!', 'success')
         
-        uploadPdf = PDF(file)
-        response = uploadPdf.extract_keywords()
+        uploadPdf = PDF(pdf=file)
+        response = uploadPdf.run() # HOW TO DO IT ASYNCHRONOUSLY D:
 
     except Exception as e:
         # Log the exception or handle it in a way that's appropriate for your application
@@ -84,44 +84,6 @@ def upload_pdf():
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def pdfextract(file):
-    import fitz
-    import re
-    import os
-    from pypdf import PdfReader
-    import matplotlib.pyplot as plt
-    import matplotlib.image as img
-
-    #file_path = 'sample.pdf' # PDF 文件路径
-    #dir_path = './' # 存放图片的文件夹
-
-    reader = file
-    length = len(reader.pages)
-    for i in range(0,length) :
-        page = reader.pages[i]
-        print(page.extract_text())
-
-    '''def pdf2image1(path, pic_path):
-        checkIM = r"/Subtype(?= */Image)"
-        pdf = fitz.open(path)
-        lenXREF = pdf.xref_length()
-        count = 1
-        for i in range(1, lenXREF):
-            text = pdf.xref_object(i)
-            isImage = re.search(checkIM, text)
-            if not isImage:
-                continue
-            pix = fitz.Pixmap(pdf, i)
-            new_name = f"img_{count}.png"
-            pix.save(os.path.join(pic_path, new_name))
-            #image = img.imread(new_name)
-            #plt.imshow(image)
-            #plt.show()
-            count += 1
-            pix = None
-
-    pdf2image1(file_path, dir_path)'''
 
 if __name__ == '__main__':
     app.run(port=8964)
